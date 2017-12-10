@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Neighbourhood Map - Udacity Frontend Nanodegree Project</title>
+	<style type="text/css">
+     	html, body { height: 100%; width: 100%; margin: 0; padding: 0; display: flex;}
+    	#map { height: 100%; width: 80%; }
+    	.sidebar {
+    		width: 20%;
+    	}
+    	.sidebar { width: 20%; text-align: center; background-color: #ebe8de;}
+   	</style>
+   	<!-- <script type='text/javascript' src='http://knockoutjs.com/downloads/knockout-3.4.2.js'></script> -->
+   	<script type='text/javascript' src='bower_components/knockout/dist/knockout.js'></script>
+</head>
+
+<body>
+	
+	<div class="sidebar">
+		<h1>Select Car Dealership</h1>
+		<select data-bind="options: dealerships, optionsCaption: 'Choose', optionsText: 'name', value: chosenDealership">
+		  <!-- <option value="volvo">Volvo</option>
+		  <option value="saab">Saab</option>
+		  <option value="mercedes">Mercedes</option>
+		  <option value="audi">Audi</option> -->
+		</select>
+	</div>
+	<div id="map"></div>
+	<script>
+
+		function DealershipsViewModel() {
+			this.dealerships = [
+				{ name: "Volvo" },
+				{ name: "BMW" },
+				{ name: "Audi" },
+				{ name: "DACIA" },
+				{ name: "Ford" },
+				{ name: "Mercedes" }
+			];
+			this. chosenDealership = ko.observable();
+			this.resetDealership = function() { this.chosenDealership(null) };
+		}
+
+		ko.applyBindings(new DealershipsViewModel());
+
+		let map;
+		let markers = [];
+
+		function initMap() {
+			map = new google.maps.Map(document.getElementById('map'), {
+		        center: {lat: 46.77121, lng: 23.623635},
+		        zoom: 13
+		    });
+
+		    var pinColor = ['9a91ea', 'FE7569'];
+    		var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor[0],
+        	new google.maps.Size(21, 34),
+        	new google.maps.Point(0,0),
+        	new google.maps.Point(10, 34));
+
+			let myHome = {lat: 46.737583, lng: 23.587853};
+			let marker = new google.maps.Marker({
+				position: myHome,
+				map: map,
+				title: 'My Home'
+			});
+
+		    var locations = [
+	          {title: 'Volvo Dealership', location: {lat: 46.750256, lng: 23.519132}},
+	          {title: 'BMW Dealership', location: {lat: 46.749598, lng: 23.518178}},
+	          {title: 'Audi Dealership', location: {lat: 46.743107, lng: 23.592566}},
+	          {title: 'DACIA Dealership', location: {lat: 46.740938, lng: 23.592174}},
+	          {title: 'Ford Dealership', location: {lat: 46.752954, lng: 23.595245}},
+	          {title: 'Mercedes Dealership', location: {lat: 46.743611, lng: 23.591782}}
+	        ];
+
+	        locations.forEach(function (location) {
+	        	let title = location.title;
+	        	let position = location.location;
+	        	let marker = new google.maps.Marker({
+	        		map: map,
+	        		position: position,
+	        		title: title,
+	        		animation: google.maps.Animation.DROP,
+	        		icon: pinImage
+	        	});
+	        	markers.push(marker);
+	        });
+
+
+		}
+	</script>
+	
+	
+	<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyBKL53PritgxDUrSSnohxQtVTRYn9v9MSU&callback=initMap" async defer></script>
+</body>
+
+</html>
