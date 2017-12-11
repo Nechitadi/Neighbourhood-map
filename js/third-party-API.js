@@ -37,7 +37,7 @@
             responseContainer.insertAdjacentHTML('beforeend', `<p class="network-warning">Oh no! There was an error making a request for the ${part}.</p>`);
         }
 
-        const articleURL = `http://api.nytimes.com/svc/search/v2/articlesearch.json?q=${searchedForText}&api-key=ab66b214d5634f06923b9fe4f1f5184c`;
+        const articleURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${searchedForText}&api-key=ab66b214d5634f06923b9fe4f1f5184c`;
         fetch(articleURL).then(response => response.json()).then(addArticles)
         .catch(e => requestError(e, 'articles'));
         function addArticles(data) {
