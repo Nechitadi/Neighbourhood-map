@@ -14,7 +14,7 @@
         width: 200px;
         height: 200px;
    	</style>
-   	<!-- <script type='text/javascript' src='http://knockoutjs.com/downloads/knockout-3.4.2.js'></script> -->
+
    	<script type='text/javascript' src='bower_components/knockout/dist/knockout.js'></script>
 </head>
 
@@ -22,7 +22,7 @@
 	
 	<div class="sidebar">
 		<h1>Select Car Dealership</h1>
-		<select data-bind="options: dealerships, optionsCaption: 'Choose', optionsText: 'name', value: chosenDealership">
+		<select id="select-dealer" data-bind="options: dealerships, optionsCaption: 'Choose', optionsText: 'name', value: selectedDealership">
 		</select>
 	</div>
 	<div id="map"></div>

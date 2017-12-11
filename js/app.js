@@ -1,4 +1,9 @@
+let markers = [];
+let map;
+
+let dealershipsViewModel;
 function DealershipsViewModel() {
+    const self = this;
     this.dealerships = [
         { name: "Volvo" },
         { name: "BMW" },
@@ -7,22 +12,30 @@ function DealershipsViewModel() {
         { name: "Ford" },
         { name: "Mercedes" }
     ];
-    this. chosenDealership = ko.observable();
-    this.resetDealership = function() { this.chosenDealership(null) };
+    this.selectedDealership = ko.observable();
+
+    this.selectedDealership.subscribe(function(newValue) {
+        // console.log(newValue);
+        resetMarkers();
+        filterMarkers();
+    })
+
+    this.resetDealership = function() { this.selectedDealership(null) };
+    
 }
 
-ko.applyBindings(new DealershipsViewModel());
+dealershipsViewModel = new DealershipsViewModel();
 
-let map;
-let markers = [];
+ko.applyBindings(dealershipsViewModel);
+
 
 var locations = [
-    {title: 'Volvo Dealership', location: {lat: 46.750256, lng: 23.519132}},
-    {title: 'BMW Dealership', location: {lat: 46.749598, lng: 23.518178}},
-    {title: 'Audi Dealership', location: {lat: 46.743107, lng: 23.592566}},
-    {title: 'DACIA Dealership', location: {lat: 46.740938, lng: 23.592174}},
-    {title: 'Ford Dealership', location: {lat: 46.752954, lng: 23.595245}},
-    {title: 'Mercedes Dealership', location: {lat: 46.743611, lng: 23.591782}}
+    {title: 'Volvo', location: {lat: 46.750256, lng: 23.519132}},
+    {title: 'BMW', location: {lat: 46.749598, lng: 23.518178}},
+    {title: 'Audi', location: {lat: 46.743107, lng: 23.592566}},
+    {title: 'DACIA', location: {lat: 46.740938, lng: 23.592174}},
+    {title: 'Ford', location: {lat: 46.752954, lng: 23.595245}},
+    {title: 'Mercedes', location: {lat: 46.743611, lng: 23.591782}}
 ];
 
 function initMap() {
@@ -96,7 +109,6 @@ function initMap() {
                 };
               var panorama = new google.maps.StreetViewPanorama(
                 document.getElementById('pano'), panoramaOptions);
-            debugger;
             } else {
               infowindow.setContent('<div>' + marker.title + '</div>' +
                 '<div>No Street View Found</div>');
@@ -112,3 +124,18 @@ function initMap() {
     
 }
 
+function filterMarkers() {
+    markers.forEach(function(marker) {
+        if(marker.title !== dealershipsViewModel.selectedDealership().name) {
+            marker.setMap(null);
+            //console.log("marker.title = " + marker.title);
+            //console.log("dealershipsViewModel.selectedDealership() = " + dealershipsViewModel.selectedDealership()) ;
+        }
+    });
+};
+
+function resetMarkers() {
+    markers.forEach(function(marker) {
+        marker.setMap(map);
+    });
+};
