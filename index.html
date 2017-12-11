@@ -11,7 +11,7 @@
 	
 	<div class="sidebar">
 		<h1>Select Car Dealership</h1>
-		<select id="select-dealer" data-bind="options: brands, optionsCaption: 'All', value: selectedDealership">
+		<select id="select-dealer" class="wrapper-dropdown-1 dropdown" data-bind="options: brands, optionsCaption: 'All', value: selectedDealership">
 		</select>
 		<ul data-bind="foreach: filteredDealers">
 			<li class="car-dealer-li-item" data-bind="text: $data.name, click: $parent.highlightMarker"></li>
