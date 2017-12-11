@@ -8,17 +8,23 @@
 </head>
 
 <body>
-	
-	<div class="sidebar">
-		<h1>Select Car Dealership</h1>
-		<select id="select-dealer" class="wrapper-dropdown-1 dropdown" data-bind="options: brands, optionsCaption: 'All', value: selectedDealership">
-		</select>
-		<ul data-bind="foreach: filteredDealers">
-			<li class="car-dealer-li-item" data-bind="text: $data.name, click: $parent.highlightMarker"></li>
-		</ul>
+	<header>
+		<div class="sidebar">
+			<h1>Select Car Dealership</h1>
+			<select id="select-dealer" class="wrapper-dropdown-1 dropdown" data-bind="options: brands, optionsCaption: 'All', value: selectedDealership">
+			</select>
+			<ul data-bind="foreach: filteredDealers">
+				<li class="car-dealer-li-item" data-bind="text: $data.name, click: $parent.highlightMarker"></li>
+				<hr>
+			</ul>
+		</div>
+		<div id="map"></div>
+	</header>
+	<section>
+		<h1>New York Times articles related to the brand and a representative photo from unsplash.com</h1>
 		<div id="response-container"></div>
-	</div>
-	<div id="map"></div>
+	</section>
+	
 
 	
 	<script src="js/app.js"></script>
