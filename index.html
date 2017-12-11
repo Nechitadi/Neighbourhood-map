@@ -16,11 +16,13 @@
 		<ul data-bind="foreach: filteredDealers">
 			<li class="car-dealer-li-item" data-bind="text: $data.name, click: $parent.highlightMarker"></li>
 		</ul>
+		<div id="response-container"></div>
 	</div>
 	<div id="map"></div>
 
 	
 	<script src="js/app.js"></script>
+	<script src="js/third-party-API.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyBKL53PritgxDUrSSnohxQtVTRYn9v9MSU&callback=initMap" async defer></script>
 </body>
 
