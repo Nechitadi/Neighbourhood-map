@@ -1,29 +1,101 @@
-function DealershipsViewModel() {
-    this.dealerships = [
-        { name: "Volvo" },
-        { name: "BMW" },
-        { name: "Audi" },
-        { name: "DACIA" },
-        { name: "Ford" },
-        { name: "Mercedes" }
-    ];
-    this. chosenDealership = ko.observable();
-    this.resetDealership = function() { this.chosenDealership(null) };
+let map;
+let carDealerListItem = document.querySelector('.car-dealer-li-item');
+
+let initialDealerships = [
+    { 
+        name: "Volvo",
+        marker: null,
+        location: {
+            lat: 46.750256,
+            lng: 23.519132
+        }
+    },
+    { 
+        name: "BMW",
+        marker: null,
+        location: {
+            lat: 46.749598,
+            lng: 23.518178
+        }
+    },
+    { 
+        name: "Audi",
+        marker: null,
+        location: {
+            lat: 46.743107,
+            lng: 23.592566
+        }
+    },
+    { 
+        name: "DACIA",
+        marker: null,
+        location: {
+            lat: 46.740938,
+            lng: 23.592174
+        }
+    },
+    { 
+        name: "Ford",
+        marker: null,
+        location: {
+            lat: 46.752954,
+            lng: 23.595245
+        }
+    },
+    { 
+        name: "Mercedes",
+        marker: null,
+        location: {
+            lat: 46.743611,
+            lng: 23.591782
+        }
+    }
+];
+
+let dealershipsViewModel;
+
+function DealershipsViewModel(dealerships) {
+    const self = this;
+    this.dealerships = ko.observableArray(dealerships);
+    this.selectedDealership = ko.observable();
+    this.selectedMarker = ko.observable();
+    this.selectedDealership.subscribe(function() {
+        resetMarkers();
+        filterMarkers();
+    })
+
+    this.resetDealership = function() { this.selectedDealership(null) };
+    this.toggleBounce = function() {
+        let marker = this.selectedMarker();
+        if (marker.getAnimation() !== null) {
+          marker.setAnimation(null);
+        } else {
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+    }
+    this.highlightMarker = function(dealerListItem) {
+        if (self.selectedMarker() !== undefined && self.selectedMarker().getAnimation() !== null) {
+            self.selectedMarker().setAnimation(null);
+        }
+        self.selectedMarker(dealerListItem.marker);
+        self.toggleBounce();
+    };
 }
 
-ko.applyBindings(new DealershipsViewModel());
+dealershipsViewModel = new DealershipsViewModel(initialDealerships);
 
-let map;
-let markers = [];
 
-var locations = [
-    {title: 'Volvo Dealership', location: {lat: 46.750256, lng: 23.519132}},
-    {title: 'BMW Dealership', location: {lat: 46.749598, lng: 23.518178}},
-    {title: 'Audi Dealership', location: {lat: 46.743107, lng: 23.592566}},
-    {title: 'DACIA Dealership', location: {lat: 46.740938, lng: 23.592174}},
-    {title: 'Ford Dealership', location: {lat: 46.752954, lng: 23.595245}},
-    {title: 'Mercedes Dealership', location: {lat: 46.743611, lng: 23.591782}}
-];
+
+ko.applyBindings(dealershipsViewModel);
+
+// var locations = [
+//     {title: 'Volvo', location: {lat: 46.750256, lng: 23.519132}},
+//     {title: 'BMW', location: {lat: 46.749598, lng: 23.518178}},
+//     {title: 'Audi', location: {lat: 46.743107, lng: 23.592566}},
+//     {title: 'DACIA', location: {lat: 46.740938, lng: 23.592174}},
+//     {title: 'Ford', location: {lat: 46.752954, lng: 23.595245}},
+//     {title: 'Mercedes', location: {lat: 46.743611, lng: 23.591782}}
+// ];
 
 function initMap() {
 
@@ -47,20 +119,23 @@ function initMap() {
 
     var largeInfowindow = new google.maps.InfoWindow();
 
+    let bounds = new google.maps.LatLngBounds();
 
-    locations.forEach(function (location) {
-        let title = location.title;
-        let position = location.location;
-        let marker = new google.maps.Marker({
+    initialDealerships.forEach(function (dealership) {
+        let title = dealership.name;
+        let position = dealership.location;
+        dealership.marker = new google.maps.Marker({
             map: map,
             position: position,
             title: title,
             animation: google.maps.Animation.DROP,
             icon: pinImage
         });
-        markers.push(marker);
 
-        marker.addListener('click', function() {
+        bounds.extend(dealership.marker.position);
+        map.fitBounds(bounds);
+
+        dealership.marker.addListener('click', function() {
             populateInfoWindow(this, largeInfowindow);
           });
     
@@ -96,7 +171,6 @@ function initMap() {
                 };
               var panorama = new google.maps.StreetViewPanorama(
                 document.getElementById('pano'), panoramaOptions);
-            debugger;
             } else {
               infowindow.setContent('<div>' + marker.title + '</div>' +
                 '<div>No Street View Found</div>');
@@ -111,4 +185,22 @@ function initMap() {
       }
     
 }
+
+function filterMarkers() {
+    initialDealerships.forEach(function(dealership) {
+        if(dealership.name !== dealershipsViewModel.selectedDealership().name) {
+            dealership.marker.setMap(null);
+            //console.log("marker.title = " + marker.title);
+            //console.log("dealershipsViewModel.selectedDealership() = " + dealershipsViewModel.selectedDealership()) ;
+        }
+    });
+};
+
+function resetMarkers() {
+    initialDealerships.forEach(function(dealership) {
+        dealership.marker.setMap(map);
+    });
+};
+
+
 

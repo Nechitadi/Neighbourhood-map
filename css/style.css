@@ -1,0 +1,11 @@
+html, body { height: 100%; width: 100%; margin: 0; padding: 0; display: flex;}
+#map { height: 100%; width: 80%; }
+.sidebar {
+    width: 20%;
+}
+.sidebar { width: 20%; text-align: center; background-color: #ebe8de;}
+
+#pano {
+width: 200px;
+height: 200px;
+}
