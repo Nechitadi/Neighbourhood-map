@@ -39,7 +39,7 @@ let initialDealerships = [
         }
     },
     { 
-        name: "DACIA",
+        name: "DACIA Service",
         marker: null,
         brand: 'DACIA',
         location: {
@@ -48,7 +48,7 @@ let initialDealerships = [
         }
     },
     { 
-        name: "Ford 1",
+        name: "Autosincron",
         brand: 'Ford',
         marker: null,
         location: {
@@ -57,16 +57,16 @@ let initialDealerships = [
         }
     },
     { 
-        name: "Ford 2",
+        name: "Compexit Trading",
         brand: 'Ford',
         marker: null,
         location: {
-            lat: 46.752957,
-            lng: 23.895235
+            lat: 46.746713,
+            lng: 23.593262
         }
     },
     { 
-        name: "Mercedes",
+        name: "Mercedes-Benz",
         brand: 'Mercedes-Benz',
         marker: null,
         location: {
@@ -223,11 +223,11 @@ function initMap() {
 
 function filterMarkers() {
     initialDealerships.forEach(function(dealership) {
-        if(dealership.brand !== dealershipsViewModel.selectedDealership()) {
+        if(dealership.brand !== dealershipsViewModel.selectedDealership() && dealershipsViewModel.selectedDealership() !== undefined) {
             dealership.marker.setMap(null);
-            //console.log("marker.title = " + marker.title);
-            //console.log("dealershipsViewModel.selectedDealership() = " + dealershipsViewModel.selectedDealership()) ;
-        }
+            console.log("dealership.brand: " + dealership.brand);
+            console.log("dealershipsViewModel.selectedDealership(): " + dealershipsViewModel.selectedDealership());
+        };
     });
 };
 

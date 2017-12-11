@@ -10,6 +10,12 @@ width: 200px;
 height: 200px;
 }
 
-.car-dealer-li-item {
-    
+ul .car-dealer-li-item {
+    list-style: none;
+    font-weight: bold;
+
+}
+
+ul .car-dealer-li-item:hover {
+    color:#1c69d4;
 }
