@@ -3,7 +3,8 @@ let carDealerListItem = document.querySelector('.car-dealer-li-item');
 
 let initialDealerships = [
     { 
-        name: "Volvo",
+        name: "Premium Cars",
+        brand: "Volvo",
         marker: null,
         location: {
             lat: 46.750256,
@@ -11,7 +12,17 @@ let initialDealerships = [
         }
     },
     { 
+        name: "Volvo Trucks",
+        brand: "Volvo",
+        marker: null,
+        location: {
+            lat: 46.751745,
+            lng: 23.414045
+        }
+    },
+    { 
         name: "BMW",
+        brand: "BMW",
         marker: null,
         location: {
             lat: 46.749598,
@@ -21,6 +32,7 @@ let initialDealerships = [
     { 
         name: "Audi",
         marker: null,
+        brand: 'Audi',
         location: {
             lat: 46.743107,
             lng: 23.592566
@@ -29,13 +41,15 @@ let initialDealerships = [
     { 
         name: "DACIA",
         marker: null,
+        brand: 'DACIA',
         location: {
             lat: 46.740938,
             lng: 23.592174
         }
     },
     { 
-        name: "Ford",
+        name: "Ford 1",
+        brand: 'Ford',
         marker: null,
         location: {
             lat: 46.752954,
@@ -43,7 +57,17 @@ let initialDealerships = [
         }
     },
     { 
+        name: "Ford 2",
+        brand: 'Ford',
+        marker: null,
+        location: {
+            lat: 46.752957,
+            lng: 23.895235
+        }
+    },
+    { 
         name: "Mercedes",
+        brand: 'Mercedes-Benz',
         marker: null,
         location: {
             lat: 46.743611,
@@ -57,12 +81,23 @@ let dealershipsViewModel;
 function DealershipsViewModel(dealerships) {
     const self = this;
     this.dealerships = ko.observableArray(dealerships);
+    this.brands = ['Volvo', 'BMW', 'Audi', 'DACIA', 'Ford', 'Mercedes-Benz'];
     this.selectedDealership = ko.observable();
     this.selectedMarker = ko.observable();
     this.selectedDealership.subscribe(function() {
         resetMarkers();
         filterMarkers();
     })
+
+    this.filteredDealers = ko.computed(function() {
+        let self = this;
+        if(this.selectedDealership() === undefined) {
+            return this.dealerships();
+        }
+        return ko.utils.arrayFilter(this.dealerships(), function(item) {
+            return item.brand === self.selectedDealership(); 
+        });
+    }, this);
 
     this.resetDealership = function() { this.selectedDealership(null) };
     this.toggleBounce = function() {
@@ -188,7 +223,7 @@ function initMap() {
 
 function filterMarkers() {
     initialDealerships.forEach(function(dealership) {
-        if(dealership.name !== dealershipsViewModel.selectedDealership().name) {
+        if(dealership.brand !== dealershipsViewModel.selectedDealership()) {
             dealership.marker.setMap(null);
             //console.log("marker.title = " + marker.title);
             //console.log("dealershipsViewModel.selectedDealership() = " + dealershipsViewModel.selectedDealership()) ;

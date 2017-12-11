@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>Neighbourhood Map - Udacity Frontend Nanodegree Project</title>
+	<link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
    	<script type='text/javascript' src='bower_components/knockout/dist/knockout.js'></script>
 </head>
@@ -10,9 +11,9 @@
 	
 	<div class="sidebar">
 		<h1>Select Car Dealership</h1>
-		<select id="select-dealer" data-bind="options: dealerships, optionsCaption: 'Choose', optionsText: 'name', value: selectedDealership">
+		<select id="select-dealer" data-bind="options: brands, optionsCaption: 'All', value: selectedDealership">
 		</select>
-		<ul data-bind="foreach: dealerships">
+		<ul data-bind="foreach: filteredDealers">
 			<li class="car-dealer-li-item" data-bind="text: $data.name, click: $parent.highlightMarker"></li>
 		</ul>
 	</div>

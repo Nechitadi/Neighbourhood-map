@@ -1,4 +1,4 @@
-html, body { height: 100%; width: 100%; margin: 0; padding: 0; display: flex;}
+html, body { height: 100%; width: 100%; margin: 0; padding: 0; display: flex; font-family: 'Cabin', sans-serif;}
 #map { height: 100%; width: 80%; }
 .sidebar {
     width: 20%;
@@ -8,4 +8,8 @@ html, body { height: 100%; width: 100%; margin: 0; padding: 0; display: flex;}
 #pano {
 width: 200px;
 height: 200px;
+}
+
+.car-dealer-li-item {
+    
 }
