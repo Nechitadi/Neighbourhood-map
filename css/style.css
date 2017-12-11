@@ -3,7 +3,9 @@ html, body { height: 100%; width: 100%; margin: 0; padding: 0; display: flex; fo
 .sidebar {
     width: 20%;
 }
-.sidebar { width: 20%; text-align: center; background-color: #ebe8de;}
+.sidebar { width: 20%; background-color: #ebe8de;}
+
+.sidebar h1 { text-align: center;}
 
 #pano {
 width: 200px;
@@ -19,3 +21,19 @@ ul .car-dealer-li-item {
 ul .car-dealer-li-item:hover {
     color:#1c69d4;
 }
+
+.wrapper-dropdown-1 {
+    position: relative; 
+
+    padding: 10px;
+    margin: 0 auto;
+
+
+    background: #1c69d4;
+    color: #fff;
+    outline: none;
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
