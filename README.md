@@ -12,7 +12,7 @@ Clicking a marker displays unique information about a location in an infoWindow.
 
 Markers animate when clicked.
 
-Application utilizes the Google Maps API and at least one non-Google third-party API.
+Application utilizes the Google Maps API, Unsplash API for the brand representative picture and New York Times API for the brand related articles.
 
 ## How to Test This App
 1. Test the app at: https://Nechitadi.github.io/Neighbourhood-map/ or
