@@ -45,7 +45,9 @@
 
             if(data.response && data.response.docs && data.response.docs[0]) {
                 const articles = data.response.docs;
-                htmlContent = '<ul>' + data.response.docs.map(article => `<li class="article"><h2><a href="${article.web_url}">${article.headline.main}</a></h2><p>${article.snippet}</p><p id="nyt-signature">article by New York Times</p></li>`) + '</ul>';
+                let articlesHtml = '';
+                data.response.docs.map(article => articlesHtml += `<li class="article"><h2><a href="${article.web_url}">${article.headline.main}</a></h2><p>${article.snippet}</p><p id="nyt-signature">article by New York Times</p></li>`) + '</ul>';
+                htmlContent = '<ul>' + articlesHtml + '</ul>';
             } else {
                 htmlContent = `<div class="error-no-articles">No articles available</div>`;
             }
