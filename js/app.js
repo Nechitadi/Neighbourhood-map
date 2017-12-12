@@ -21,7 +21,7 @@ let initialDealerships = [
         }
     },
     { 
-        name: "BMW",
+        name: "Autotransilvania",
         brand: "BMW",
         marker: null,
         location: {
@@ -30,7 +30,7 @@ let initialDealerships = [
         }
     },
     { 
-        name: "Audi",
+        name: "Autoworld - Audi",
         marker: null,
         brand: 'Audi',
         location: {
@@ -86,7 +86,9 @@ function DealershipsViewModel(dealerships) {
     this.selectedMarker = ko.observable();
     this.selectedDealership.subscribe(function() {
         resetMarkers();
+        //resetMarkerColor();
         filterMarkers();
+        
     })
 
     this.filteredDealers = ko.computed(function() {
@@ -119,18 +121,8 @@ function DealershipsViewModel(dealerships) {
 
 dealershipsViewModel = new DealershipsViewModel(initialDealerships);
 
-
-
 ko.applyBindings(dealershipsViewModel);
 
-// var locations = [
-//     {title: 'Volvo', location: {lat: 46.750256, lng: 23.519132}},
-//     {title: 'BMW', location: {lat: 46.749598, lng: 23.518178}},
-//     {title: 'Audi', location: {lat: 46.743107, lng: 23.592566}},
-//     {title: 'DACIA', location: {lat: 46.740938, lng: 23.592174}},
-//     {title: 'Ford', location: {lat: 46.752954, lng: 23.595245}},
-//     {title: 'Mercedes', location: {lat: 46.743611, lng: 23.591782}}
-// ];
 
 function initMap() {
 
@@ -141,6 +133,11 @@ function initMap() {
 
     var pinColor = ['9a91ea', 'FE7569'];
     var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor[0],
+    new google.maps.Size(21, 34),
+    new google.maps.Point(0,0),
+    new google.maps.Point(10, 34));
+
+    var clickedPinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor[1],
     new google.maps.Size(21, 34),
     new google.maps.Point(0,0),
     new google.maps.Point(10, 34));
@@ -172,6 +169,8 @@ function initMap() {
 
         dealership.marker.addListener('click', function() {
             populateInfoWindow(this, largeInfowindow);
+            resetMarkerColor();
+            this.setIcon(clickedPinImage);
           });
     
     });
@@ -237,5 +236,16 @@ function resetMarkers() {
     });
 };
 
+function resetMarkerColor() {
+
+    var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + '9a91ea',
+    new google.maps.Size(21, 34),
+    new google.maps.Point(0,0),
+    new google.maps.Point(10, 34));
+
+    initialDealerships.forEach(function(dealership) {
+        dealership.marker.setIcon(pinImage);   
+    });
+}
 
 
