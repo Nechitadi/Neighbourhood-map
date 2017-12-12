@@ -86,7 +86,6 @@ function DealershipsViewModel(dealerships) {
     this.selectedMarker = ko.observable();
     this.selectedDealership.subscribe(function() {
         resetMarkers();
-        //resetMarkerColor();
         filterMarkers();
         
     })
@@ -216,7 +215,7 @@ function initMap() {
           // Open the infowindow on the correct marker.
           infowindow.open(map, marker);
         }
-      }
+    }
     
 }
 
@@ -248,4 +247,8 @@ function resetMarkerColor() {
     });
 }
 
+// Map loading error handling function
+mapError = () => {
+    document.getElementById('map').innerHTML = '<span><h1>Map loading error</h1></span>';
+  };
 
