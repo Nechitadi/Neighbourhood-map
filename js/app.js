@@ -161,19 +161,6 @@ function DealershipsViewModel(dealerships) {
             });
         });
     });
-
-    this.getContent = function(space) {
-        var contentString = "<h3>" + space.name +
-            "</h3><br><div style='width:200px;min-height:120px'><img src=" + '"' +
-            space.photoUrl + '"></div><div><a href="' + space.shortUrl +
-            '" target="_blank">More info in Foursquare</a><img src="img/foursquare_150.png">';
-        var errorString = "Oops, Foursquare content not available."
-        if (space.name.length > 0) {
-            return contentString;
-            } else {
-            return errorString;
-            }
-        }
 }
 
 dealershipsViewModel = new DealershipsViewModel(initialDealerships);
