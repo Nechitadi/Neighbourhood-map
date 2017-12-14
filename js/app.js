@@ -3,6 +3,11 @@ let carDealerListItem = document.querySelector('.car-dealer-li-item');
 let largeInfowindow;
 let clickedPinImage;
 
+let BaseUrl = "https://api.foursquare.com/v2/venues/",
+fsClient_id = "client_id=Y1XQVJCMO2RXBUVFM2UDYMVD4WVU4ORDQ3ONBONR1URPE1FX",
+fsClient_secret = "&client_secret=JFPUPZAFVKRID3ZERKP0BGWRC4ONQNP4V1IGJPCKVJSZRPHE",
+fsVersion = "&v=20161016";
+
 let initialDealerships = [
     { 
         name: "Premium Cars",
@@ -11,7 +16,8 @@ let initialDealerships = [
         location: {
             lat: 46.750256,
             lng: 23.519132
-        }
+        },
+        fs_id: "4d514b103626a0936dd222bd"
     },
     { 
         name: "Volvo Trucks",
@@ -20,7 +26,8 @@ let initialDealerships = [
         location: {
             lat: 46.751745,
             lng: 23.414045
-        }
+        },
+        fs_id: "500ed4c7e4b0302f936f1ecc"
     },
     { 
         name: "Autotransilvania",
@@ -29,7 +36,8 @@ let initialDealerships = [
         location: {
             lat: 46.749598,
             lng: 23.518178
-        }
+        },
+        fs_id: "4efd785a7716488c5d970b07"
     },
     { 
         name: "Autoworld - Audi",
@@ -38,7 +46,8 @@ let initialDealerships = [
         location: {
             lat: 46.743107,
             lng: 23.592566
-        }
+        },
+        fs_id: "4f6d917ee4b09e7354b3eb74"
     },
     { 
         name: "DACIA Service",
@@ -47,7 +56,8 @@ let initialDealerships = [
         location: {
             lat: 46.740938,
             lng: 23.592174
-        }
+        },
+        fs_id: "4c5bb25dfff99c74be962cd3"
     },
     { 
         name: "Autosincron",
@@ -56,7 +66,8 @@ let initialDealerships = [
         location: {
             lat: 46.752954,
             lng: 23.595245
-        }
+        },
+        fs_id: "4f7c3cd6e4b0dc29a65d59a5"
     },
     { 
         name: "Compexit Trading",
@@ -65,16 +76,18 @@ let initialDealerships = [
         location: {
             lat: 46.746713,
             lng: 23.593262
-        }
+        },
+        fs_id: "4d995735e07ea35d06300703"
     },
     { 
-        name: "Mercedes-Benz",
+        name: "RMB Inter Auto",
         brand: 'Mercedes-Benz',
         marker: null,
         location: {
             lat: 46.743611,
             lng: 23.591782
-        }
+        },
+        fs_id: "4d3a9b6acc48224b6deb3e4f"
     }
 ];
 
@@ -88,8 +101,7 @@ function DealershipsViewModel(dealerships) {
     this.selectedMarker = ko.observable();
     this.selectedDealership.subscribe(function() {
         resetMarkers();
-        filterMarkers();
-        
+        filterMarkers();  
     })
 
     this.filteredDealers = ko.computed(function() {
@@ -121,11 +133,67 @@ function DealershipsViewModel(dealerships) {
         resetMarkerColor();
         dealerListItem.marker.setIcon(clickedPinImage);
     };
+
+    this.getFoursquareData = ko.computed(function(){
+        initialDealerships.forEach(function(space) {  
+          // Set initail variables to build the correct URL for each space
+          var  venueId = space.fs_id + "/?";
+          var foursquareUrl = BaseUrl + venueId + fsClient_id + fsClient_secret + fsVersion;
+  
+            // AJAX call to Foursquare
+            $.ajax({
+                type: "GET",
+                url: foursquareUrl,
+                dataType: "json",
+                cache: false,
+                success: function(data) {
+                    var response = data.response ? data.response : "";
+                    var venue = response.venue ? data.venue : "";
+                    space.name = response.venue.name;
+                    space.shortUrl = response.venue.shortUrl;
+                    space.photoUrl = response.venue.bestPhoto["prefix"] + "height150" +
+                    response.venue.bestPhoto["suffix"];
+                    //console.log(space.name);
+                    //console.log(space.shortUrl);
+                    //console.log(space.photoUrl);
+                    //debugger;
+                }
+            });
+        });
+    });
+
+    this.getContent = function(space) {
+        var contentString = "<h3>" + space.name +
+            "</h3><br><div style='width:200px;min-height:120px'><img src=" + '"' +
+            space.photoUrl + '"></div><div><a href="' + space.shortUrl +
+            '" target="_blank">More info in Foursquare</a><img src="img/foursquare_150.png">';
+        var errorString = "Oops, Foursquare content not available."
+        if (space.name.length > 0) {
+            return contentString;
+            } else {
+            return errorString;
+            }
+        }
 }
 
 dealershipsViewModel = new DealershipsViewModel(initialDealerships);
 
 ko.applyBindings(dealershipsViewModel);
+
+// Get content infowindows
+
+function setForsquareContent(space) {
+    var contentString = "<div id='forsquare-data'><h3>" + space.name +
+        "</h3><br><div style='width:200px;min-height:120px'><img src=" + '"' +
+        space.photoUrl + '"></div><div><a href="' + space.shortUrl +
+        '" target="_blank">More info in Foursquare</a><img id="fs-logo" src="img/fs-logo.png"></div>';
+    var errorString = "Oops, Foursquare content not available."
+    if (space.name.length > 0) {
+        return contentString;
+        } else {
+        return errorString;
+        }
+}
 
 function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
@@ -138,7 +206,8 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.marker = null;
       });
       var streetViewService = new google.maps.StreetViewService();
-      var radius = 50;
+      var radius = 500;
+
       // In case the status is OK, which means the pano was found, compute the
       // position of the streetview image, then calculate the heading, then get a
       // panorama from that and set the options
@@ -147,7 +216,7 @@ function populateInfoWindow(marker, infowindow) {
           var nearStreetViewLocation = data.location.latLng;
           var heading = google.maps.geometry.spherical.computeHeading(
             nearStreetViewLocation, marker.position);
-            infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+            infowindow.setContent('<div class="info-window"><div id="street-view">' + marker.title + '</div><div id="pano"></div>' + setForsquareContent(initialDealerships[marker.index]) + '</div>');
             var panoramaOptions = {
               position: nearStreetViewLocation,
               pov: {
@@ -171,7 +240,6 @@ function populateInfoWindow(marker, infowindow) {
 }
 
 function initMap() {
-
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 46.77121, lng: 23.623635},
         zoom: 13
@@ -198,7 +266,7 @@ function initMap() {
     largeInfowindow = new google.maps.InfoWindow();
 
     let bounds = new google.maps.LatLngBounds();
-
+    let i = 0;
     initialDealerships.forEach(function (dealership) {
         let title = dealership.name;
         let position = dealership.location;
@@ -207,7 +275,8 @@ function initMap() {
             position: position,
             title: title,
             animation: google.maps.Animation.DROP,
-            icon: pinImage
+            icon: pinImage,
+            index: i++
         });
 
         bounds.extend(dealership.marker.position);
@@ -220,10 +289,7 @@ function initMap() {
             removeBounce();
           });
     
-    });
-
-    
-    
+    });   
 }
 
 function filterMarkers() {
@@ -265,3 +331,6 @@ mapError = () => {
     document.getElementById('map').innerHTML = '<span><h1>Map loading error</h1></span>';
   };
 
+  initialDealerships.forEach(function(dealership) {
+    dealership.forsquareContent = setForsquareContent(dealership);
+});

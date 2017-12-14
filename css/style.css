@@ -122,3 +122,8 @@ a {
     float: right;
     font-size: 0.8em;
 }
+
+#fs-logo {
+    width: 20px;
+    height: 20px;
+}
