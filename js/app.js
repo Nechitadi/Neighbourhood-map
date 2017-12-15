@@ -153,10 +153,10 @@ function DealershipsViewModel(dealerships) {
                     space.shortUrl = response.venue.shortUrl;
                     space.photoUrl = response.venue.bestPhoto["prefix"] + "height150" +
                     response.venue.bestPhoto["suffix"];
-                    //console.log(space.name);
-                    //console.log(space.shortUrl);
-                    //console.log(space.photoUrl);
-                    //debugger;
+                    space.fsContent = true;
+                },
+                error: function() {
+                    space.fsContent = false;
                 }
             });
         });
@@ -175,7 +175,7 @@ function setForsquareContent(space) {
         space.photoUrl + '"></div><div><a href="' + space.shortUrl +
         '" target="_blank">More info in Foursquare</a><img id="fs-logo" src="img/fs-logo.png"></div>';
     var errorString = "Oops, Foursquare content not available."
-    if (space.name.length > 0) {
+    if (space.name.length > 0 && space.fsContent) {
         return contentString;
         } else {
         return errorString;
